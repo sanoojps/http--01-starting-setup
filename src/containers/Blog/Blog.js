@@ -53,10 +53,16 @@ class Blog extends Component {
                    {posts}
                 </section>
                 <section>
-                    <FullPost id={this.state.selectedPostId} />
+                    <FullPost 
+                    id={this.state.selectedPostId} 
+                    allPosts={this.state.posts}
+                    deleteCallback={this.deletedPostsHandler}
+                    />
                 </section>
                 <section>
-                    <NewPost />
+                    <NewPost
+                    postSuccessCallBack={this.postSuccessCallBackHandler}
+                     />
                 </section>
             </div>
         );
@@ -67,6 +73,12 @@ class Blog extends Component {
         axios.get(
             'https://jsonplaceholder.typicode.com/posts'
         ) //promise 
+        .catch(
+            (error) => {
+                console.log("error after get");
+                console.log(error);
+            }
+        )
             .then(
                 (response) => {
 
@@ -103,11 +115,11 @@ class Blog extends Component {
                             }
                         )
 
-                        console.log(
-                            {
-                                posts: updatedPosts
-                            }
-                        )
+                        // console.log(
+                        //     {
+                        //         posts: updatedPosts
+                        //     }
+                        // )
                     }
                     else {
 
@@ -115,6 +127,7 @@ class Blog extends Component {
 
                 }
             ) //then
+            
     }
     
 
@@ -137,6 +150,59 @@ class Blog extends Component {
             }
         )
     };
+
+    /**
+     * Deleted posts should be removed from display
+     */
+    deletedPostsHandler = (remainingPosts) => {
+        this.setState({
+            posts: remainingPosts,
+            selectedPostId: null,
+        })
+    }
+
+
+    /**
+     * Post succesfull
+     * 
+     * New data added of type NewPostModel
+     * 
+     * Update to current list
+     */
+    postSuccessCallBackHandler = (data) => {
+
+        console.log("data")
+        console.log(data);
+
+        const posts = [...this.state.posts];
+        
+        /**
+         * data format
+         * //author,content,id,title
+         * 
+         * Convery data to 
+         * {
+         *      //userId,body,id,title
+         * }
+         */
+        const post ={...posts[0]};
+        post.id = data.id
+        post.title = data.title;
+        post.body = data.content;
+        post.author = data.author;
+
+
+        posts.push(post);
+
+        console.log(posts);
+
+        this.setState(
+            {
+                posts: posts
+            }
+        )
+    }
 }
+
 
 export default Blog;

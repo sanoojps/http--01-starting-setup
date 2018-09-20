@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import './NewPost.css';
 import axios from 'axios';
 
-
 class NewPostModel {
     title = '';
     content = '';
@@ -15,6 +14,16 @@ class NewPostModel {
         this.author = author;
     }
 }
+
+/**
+ * Expected Prop Types
+ */
+/* eslint-disable */
+import PropTypes from 'prop-types';
+const propTypes = {
+    postSuccessCallBack: PropTypes.func,
+}
+/* eslint-enable */
 
 class NewPost extends Component {
     state = //{
@@ -42,15 +51,19 @@ class NewPost extends Component {
     } //render
 
     postDataHandler = () => {
-
         const data = new NewPostModel(
            this.state.title,
-            this.state.body,
-            this.state.title,
+            this.state.content,
+            this.state.author,
         ) 
 
         //or 
-        const dataAlt = {...this.state};
+        //const dataAlt = {...this.state};
+
+        console.log("data");
+        console.log(data);
+
+        console.log(this.state);
 
         axios
           .post(
@@ -59,10 +72,21 @@ class NewPost extends Component {
                )
           .then(
               (response) => {
+                  //console.log("response");
                   console.log(response);
+
+                  // pass data to add to all posts in Blog
+                  this.props.postSuccessCallBack(
+                    response.data //author,content,id,title
+                  ); 
               }
           );
     }
 }
+
+/**
+ * PropType validation
+ */
+NewPost.PropTypes = propTypes;
 
 export default NewPost;

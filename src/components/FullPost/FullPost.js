@@ -8,18 +8,21 @@ import axios from 'axios';
  */
 /* eslint-disable */
 import PropTypes from 'prop-types';
-import Axios from 'axios';
 const propTypes = {
     id: PropTypes.number.isRequired || PropTypes.string.isRequired,
+    allPosts: PropTypes.array,
+    deleteCallback: PropTypes.func,
+    getPostDetailsErrorCallback: PropTypes.func,
 }
 /* eslint-enable */
 
 class FullPost extends Component {
+
     render () {
 
         let post = <p style={{textAlign:"center"}}>Please select a Post!</p>;
         
-        if (this.props.id) {
+        if (this.props.id && !this.clearSelection) {
             post = <p style={{textAlign:"center"}}>Loading</p>;
         }
 
@@ -29,7 +32,10 @@ class FullPost extends Component {
                     <h1>{this.state.loadedPost.title}</h1>
                     <p>{this.state.loadedPost.content}</p>
                     <div className="Edit">
-                        <button className="Delete">Delete</button>
+                        <button
+                         className="Delete"
+                         onClick={this.deletePostHandler}
+                         >Delete</button>
                     </div>
                 </div>
     
@@ -47,8 +53,8 @@ class FullPost extends Component {
         /**
          * Null check
          */
-        console.log("arguments");
-        console.log(prevProps);
+        //console.log("arguments");
+        //console.log(prevProps);
         // console.log(prevState);
 
         if (this.props.id) {
@@ -79,6 +85,16 @@ class FullPost extends Component {
                 }
                
             ) //then
+            .catch(
+                (error) => {
+                    console.log("error after get");
+                    console.log(error);
+                    /**
+                     * Signal Error
+                     */
+                    this.props.getPostDetailsErrorCallback(error);
+                }
+            )
         }
         else
         {
@@ -91,8 +107,75 @@ class FullPost extends Component {
 
     state = {
         loadedPost : null
-    }
+    };
     
+
+    deletePostHandler = () => {
+
+        if (this.props.id) {
+
+        axios.delete(
+            'https://jsonplaceholder.typicode.com/posts/' + this.props.id
+        ).then(
+            (response) => {
+
+                // console.log(
+                //     response
+                // );
+
+              if (response.status === 200)
+              {   
+                  const posts = 
+                  this.props.allPosts;
+
+                  //console.log(posts);
+
+                  const filteredPosts =   
+                  posts.filter(
+                      (element) => {
+                            return element.id !== this.props.id
+                      }
+                  );
+
+                  /**
+                   * Clean slate
+                   * 
+                   * Clear state
+                   * 
+                 
+                   */
+                  /**
+                   * Update state so that selected post is also cleared
+                   */
+                  this.setState({
+                    loadedPost : null
+                  })
+
+                   /**
+                   * Signal Blog 
+                   * 
+                   * Clear props.id as nothing is selected
+                   */
+                  this.props.deleteCallback(
+                    filteredPosts
+                  );
+              }
+              else
+              {
+                  console.log(
+                      response
+                  );
+              }
+            }
+           
+        ) //then
+    }
+    else
+    {
+        //id nil
+    }
+    };
+
 }
 
 FullPost.PropTypes = propTypes
