@@ -66,35 +66,35 @@ class FullPost extends Component {
                 return
             }
 
-            axios.get(
-                'https://jsonplaceholder.typicode.com/posts/' + this.props.id
-            ).then(
-                (response) => {
-                  if (response.status === 200)
-                  {   
-                      this.setState({
-                          loadedPost: response.data
-                      })
-                  }
-                  else
-                  {
-                      console.log(
-                          response
-                      );
-                  }
-                }
-               
-            ) //then
-            .catch(
-                (error) => {
-                    console.log("error after get");
-                    console.log(error);
-                    /**
-                     * Signal Error
-                     */
-                    this.props.getPostDetailsErrorCallback(error);
-                }
-            )
+            axios
+                .get(
+                    'https://jsonplaceholder.typicode.com/posts/' + this.props.id
+                )
+                .then(
+                    (response) => {
+                        if (response.status === 200) {
+                            this.setState({
+                                loadedPost: response.data
+                            })
+                        }
+                        else {
+                            console.log(
+                                response
+                            );
+                        }
+                    }
+
+                ) //then
+                .catch(
+                    (error) => {
+                        console.log("error after get");
+                        console.log(error);
+                        /**
+                         * Signal Error
+                         */
+                        this.props.getPostDetailsErrorCallback(error);
+                    }
+                )
         }
         else
         {
