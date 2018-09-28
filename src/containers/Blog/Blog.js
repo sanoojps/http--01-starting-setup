@@ -32,21 +32,33 @@ class Blog extends Component {
     
     render () {
 
-        const posts = this.state.posts.map(
-            (post) => {
-                return (
-                    <Post 
-                    key = {post.id}
-                    title ={post.title}
-                    author={post.author}
-                    clicked={ () => {
-                        return this.postClickhandler(post.id)
-                    } }
-                    >
-                    </Post>
-                )
-            }
-            );
+        let posts = 
+        (
+            <p style={{textAlign: "center"}}>
+                Something went wrong
+            </p>
+        )
+
+        if (!this.state.error)
+        {   
+            posts = this.state.posts.map(
+                (post) => {
+                    return (
+                        <Post 
+                        key = {post.id}
+                        title ={post.title}
+                        author={post.author}
+                        clicked={ () => {
+                            return this.postClickhandler(post.id)
+                        } }
+                        >
+                        </Post>
+                    )
+                }
+                );
+        }
+
+        
         return (
             <div>
                 <section className="Posts">
@@ -127,6 +139,19 @@ class Blog extends Component {
 
                 }
             ) //then
+            .catch(
+                (error) =>  {
+
+                    console.log(error);
+
+                    this.setState(
+                        {
+                            error:true
+                        }
+                    )
+
+                }
+                );
             
     }
     
@@ -136,7 +161,8 @@ class Blog extends Component {
      */
     state = {
         posts: [],
-        selectedPostId: null
+        selectedPostId: null,
+        error: false
     }
 
     /**
