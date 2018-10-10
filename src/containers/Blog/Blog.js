@@ -4,7 +4,13 @@ import Post from '../../components/Post/Post';
 import FullPost from '../../components/FullPost/FullPost';
 import NewPost from '../../components/NewPost/NewPost';
 import './Blog.css';
-import axios from "axios";
+//import axios from "axios";
+import axios from '../../AxiosHandler';
+import Posts from '../Blog/Posts/Posts';
+
+
+import {Route,Link} from 'react-router-dom';
+
 import PropTypes from 'prop-types';
 
  /**
@@ -32,39 +38,65 @@ class Blog extends Component {
     
     render () {
 
-        let posts = 
-        (
-            <p style={{textAlign: "center"}}>
-                Something went wrong
-            </p>
-        )
+        // let posts = 
+        // (
+        //     <p style={{textAlign: "center"}}>
+        //         Something went wrong
+        //     </p>
+        // )
 
-        if (!this.state.error)
-        {   
-            posts = this.state.posts.map(
-                (post) => {
-                    return (
-                        <Post 
-                        key = {post.id}
-                        title ={post.title}
-                        author={post.author}
-                        clicked={ () => {
-                            return this.postClickhandler(post.id)
-                        } }
-                        >
-                        </Post>
-                    )
-                }
-                );
-        }
+        // if (!this.state.error)
+        // {   
+        //     posts = this.state.posts.map(
+        //         (post) => {
+        //             return (
+        //                 <Post 
+        //                 key = {post.id}
+        //                 title ={post.title}
+        //                 author={post.author}
+        //                 clicked={ () => {
+        //                     return this.postClickhandler(post.id)
+        //                 } }
+        //                 >
+        //                 </Post>
+        //             )
+        //         }
+        //         );
+        // }
 
         
         return (
             <div>
-                <section className="Posts">
+                <div className="Blog" >
+                    <header>
+                        <nav>
+                            <ul>
+                                <li>
+                                    {/* <a
+                                        href="/"
+                                    >
+                                        Home
+                                </a> */}
+                                <Link to="/">Home</Link>
+                                </li>
+                                <li>
+                                    <Link 
+                                    to={{
+                                        pathname: '/new-post',
+                                        hash: '#submit',
+                                        search: '?quick-submit=true'
+                                    }}>New post</Link>
+                                </li>
+                                <li></li>
+                            </ul>
+                        </nav>
+                    </header>
+                </div>
+
+                {/* <section className="Posts">
                    {posts}
-                </section>
-                <section>
+                </section> */}
+                {/* <section>
                     <FullPost 
                     id={this.state.selectedPostId} 
                     allPosts={this.state.posts}
@@ -75,85 +107,98 @@ class Blog extends Component {
                     <NewPost
                     postSuccessCallBack={this.postSuccessCallBackHandler}
                      />
-                </section>
+                </section> */}
+
+               {/* <Posts></Posts> */}
+
+               {/* <Route path="/" exact render={ ()=> { return (<h1>Home</h1>) } } >
+               </Route> */}
+
+               <Route path='/' exact component={Posts}/>
+               <Route path= '/new-post' exact component={NewPost}/>
+               
+
+
+
             </div>
         );
     }
 
    
-    componentDidMount = () => {
-        axios.get(
-            'https://jsonplaceholder.typicode.com/posts'
-        ) //promise 
-        .catch(
-            (error) => {
-                console.log("error after get");
-                console.log(error);
-            }
-        )
-            .then(
-                (response) => {
+    // componentDidMount = () => {
+    //     axios
+    //     .get(
+    //         "/posts"
+    //     ) //promise 
+    //     .catch(
+    //         (error) => {
+    //             console.log("error after get");
+    //             console.log(error);
+    //         }
+    //     )
+    //         .then(
+    //             (response) => {
 
-                    // console.log(response);
-                    // console.log(response.config);
-                    // console.log(response.data);
-                    // console.log(response.headers);
-                    // console.log(response.request);
-                    // console.log(response.status);
-                    // console.log(response.statusText);
+    //                 // console.log(response);
+    //                 // console.log(response.config);
+    //                 // console.log(response.data);
+    //                 // console.log(response.headers);
+    //                 // console.log(response.request);
+    //                 // console.log(response.status);
+    //                 // console.log(response.statusText);
 
-                    /**
-                * Seting state on call back
-                */
-                    if (response.status === 200) {
+    //                 /**
+    //             * Seting state on call back
+    //             */
+    //                 if (response.status === 200) {
 
-                        const posts = 
-                        response.data.slice(0,4);
+    //                     const posts = 
+    //                     response.data.slice(0,4);
 
-                        const updatedPosts = 
-                        posts.map (
-                            (post) => {
-                                return ({
-                                    ...post, // all properties from post
-                                    author: 'Max'
-                                }
-                                );
-                            }
-                        );
+    //                     const updatedPosts = 
+    //                     posts.map (
+    //                         (post) => {
+    //                             return ({
+    //                                 ...post, // all properties from post
+    //                                 author: 'Max'
+    //                             }
+    //                             );
+    //                         }
+    //                     );
 
-                        this.setState(
-                            {
-                                posts: updatedPosts
-                            }
-                        )
+    //                     this.setState(
+    //                         {
+    //                             posts: updatedPosts
+    //                         }
+    //                     )
 
-                        // console.log(
-                        //     {
-                        //         posts: updatedPosts
-                        //     }
-                        // )
-                    }
-                    else {
+    //                     // console.log(
+    //                     //     {
+    //                     //         posts: updatedPosts
+    //                     //     }
+    //                     // )
+    //                 }
+    //                 else {
 
-                    }
+    //                 }
 
-                }
-            ) //then
-            .catch(
-                (error) =>  {
+    //             }
+    //         ) //then
+    //         .catch(
+    //             (error) =>  {
 
-                    console.log(error);
+    //                 console.log(error);
 
-                    this.setState(
-                        {
-                            error:true
-                        }
-                    )
+    //                 this.setState(
+    //                     {
+    //                         error:true
+    //                     }
+    //                 )
 
-                }
-                );
+    //             }
+    //             );
             
-    }
+    // }
     
 
     /**
