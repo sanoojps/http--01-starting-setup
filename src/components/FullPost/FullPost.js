@@ -44,6 +44,59 @@ class FullPost extends Component {
         return post;
     }
 
+componentDidMount() {
+    console.log(this.props);
+
+    if (this.props.match.params.postId) {
+    
+        if (this.state.loadedPost || (
+            this.state.loadedPost
+        ))
+            {
+
+            }
+
+        axios
+        .get(
+            'https://jsonplaceholder.typicode.com/posts/' + 
+            this.props.match.params.postId
+        )
+        .then(
+            (response) => {
+                if (response.status === 200) {
+                    this.setState({
+                        loadedPost: response.data
+                    })
+                }
+                else {
+                    console.log(
+                        response
+                    );
+                }
+            }
+
+        ) //then
+        .catch(
+            (error) => {
+                console.log("error after get");
+                console.log(error);
+                /**
+                 * Signal Error
+                 */
+                //this.props.getPostDetailsErrorCallback(error);
+            }
+        )
+
+
+    }
+    else 
+    {
+
+    }
+    
+}
+
+
     /**
      * Make full post WS call
      * // updating state causes infinite loop

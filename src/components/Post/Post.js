@@ -2,6 +2,9 @@ import React from 'react';
 
 import './Post.css';
 
+import {withRouter} from 'react-router-dom';
+
+
 /**
  * Expected Prop Types
  */
@@ -28,4 +31,12 @@ const post = (props) => (
     </article>
 );
 
-export default post;
+/***
+ * History Location and match
+ * 
+ * making this route aware
+ * 
+ * nearest loaded route's prop
+ * 
+ */
+export default withRouter(post);

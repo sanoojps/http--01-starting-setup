@@ -8,8 +8,10 @@ import './Blog.css';
 import axios from '../../AxiosHandler';
 import Posts from '../Blog/Posts/Posts';
 
+//import Post from '../../components/Post/Post';
 
-import {Route,Link} from 'react-router-dom';
+
+import {Route,Link,NavLink,Switch} from 'react-router-dom';
 
 import PropTypes from 'prop-types';
 
@@ -77,15 +79,24 @@ class Blog extends Component {
                                     >
                                         Home
                                 </a> */}
-                                <Link to="/">Home</Link>
+                                <NavLink 
+                                to="/" 
+                                exact
+                                activeClassName='active'
+                                activeStyle={
+                                    {
+                                        color: '#fa923f'
+                                    }
+                                } 
+                                >Home</NavLink>
                                 </li>
                                 <li>
-                                    <Link 
+                                    <NavLink 
                                     to={{
                                         pathname: '/new-post',
                                         hash: '#submit',
                                         search: '?quick-submit=true'
-                                    }}>New post</Link>
+                                    }}>New post</NavLink>
                                 </li>
                                 <li></li>
                             </ul>
@@ -113,13 +124,18 @@ class Blog extends Component {
 
                {/* <Route path="/" exact render={ ()=> { return (<h1>Home</h1>) } } >
                </Route> */}
-
+               
+               <Switch>
                <Route path='/' exact component={Posts}/>
                <Route path= '/new-post' exact component={NewPost}/>
                
-
-
-
+               {/**
+                Dynamic routing
+                route parameters
+                */}
+               <Route path='/:postId' exact component={FullPost}/>
+               </Switch>
+              
             </div>
         );
     }

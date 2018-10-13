@@ -3,6 +3,8 @@ import Post from "../../../components/Post/Post";
 import axios from "../../../AxiosHandler";
 import './Posts.css';
 
+import {Link} from 'react-router-dom';
+
 export default class componentName extends Component {
 
 /**
@@ -29,15 +31,19 @@ export default class componentName extends Component {
         posts = this.state.posts.map(
             (post) => {
                 return (
-                    <Post 
-                    key = {post.id}
-                    title ={post.title}
-                    author={post.author}
-                    clicked={ () => {
-                        return this.postClickhandler(post.id)
-                    } }
+                    <Link
+                    to={"/" + post.id}
                     >
-                    </Post>
+                        <Post
+                            key={post.id}
+                            title={post.title}
+                            author={post.author}
+                            clicked={() => {
+                                return this.postClickhandler(post.id)
+                            }}
+                        >
+                        </Post>
+                    </Link>
                 )
             }
             );
