@@ -11,7 +11,8 @@ import Posts from '../Blog/Posts/Posts';
 //import Post from '../../components/Post/Post';
 
 
-import {Route,Link,NavLink,Switch} from 'react-router-dom';
+import {Route,Link,NavLink,Switch,Redirect} from 'react-router-dom';
+import asyncComponent from '../../hoc/asyncComponent';
 
 import PropTypes from 'prop-types';
 
@@ -36,8 +37,17 @@ PostDetails.PropTypes = {
     author: PropTypes.string.isRequired,
 }
 
+const AsyncNewPost = asyncComponent(() => {
+    /**
+     * returns a promise
+     */
+    return import('./NewPost/NewPost');
+});
 class Blog extends Component {
-    
+    state = {
+        auth: true
+    }
+
     render () {
 
         // let posts = 
@@ -126,14 +136,28 @@ class Blog extends Component {
                </Route> */}
                
                <Switch>
+               {this.state.auth ? <Route path="/new-post" component={AsyncNewPost} /> : null}
                <Route path='/' exact component={Posts}/>
                <Route path= '/new-post' exact component={NewPost}/>
+               <Route path= '/posts' exact component={Posts}/>
                
                {/**
                 Dynamic routing
                 route parameters
                 */}
-               <Route path='/:postId' exact component={FullPost}/>
+               {/* <Route path='/:postId' exact component={FullPost}/> */}
+               {/* <Redirect from='/' to='/posts'> 
+               </Redirect> */}
+               
+               {/**
+                    Unknown route
+                */
+               }
+               <Route
+               render={() => <h1>Not found</h1>}
+               >
+
+                   </Route>               
                </Switch>
               
             </div>

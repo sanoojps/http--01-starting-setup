@@ -3,10 +3,12 @@ import React, { Component } from 'react';
 import './NewPost.css';
 import axios from 'axios';
 
+import {Redirect} from 'react-router-dom';
 class NewPostModel {
     title = '';
     content = '';
     author = 'Max';
+    submitted = false;
 
     constructor(title,content,author) {
         this.title = title;
@@ -31,8 +33,16 @@ class NewPost extends Component {
     //}
 
     render () {
+        let redirect = null;
+        if (this.state.submitted) {
+            redirect = (
+                <Redirect to="/posts">
+                </Redirect>
+            )
+        }
         return (
             <div className="NewPost">
+                {redirect}
                 <h1>Add a Post</h1>
                 <label>Title</label>
                 <input type="text" value={this.state.title} onChange={(event) => this.setState({title: event.target.value})} />
@@ -79,6 +89,12 @@ class NewPost extends Component {
                   this.props.postSuccessCallBack(
                     response.data //author,content,id,title
                   ); 
+
+                    this.setState(
+                        {
+                            submitted: true,
+                        }
+                    )
               }
           );
     }
