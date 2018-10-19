@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import './FullPost.css';
-import axios from 'axios';
+import axios from '../../AxiosHandler';
 
 /**
  * Expected Prop Types
@@ -44,118 +44,150 @@ class FullPost extends Component {
         return post;
     }
 
-componentDidMount() {
-    console.log(this.props);
-
-    if (this.props.match.params.postId) {
-    
-        if (this.state.loadedPost || (
-            this.state.loadedPost
-        ))
-            {
-
+    loadData() {
+        console.log("loadData FullPost");
+        console.log(this.props);
+        console.log(this.state);
+        
+        if (this.props.match.params.postId) {
+            if (!this.state.loadedPost ||
+                 (this.state.loadedPost &&
+                     this.state.loadedPost.id !==
+                      +this.props.match.params.postId)) {
+                axios.get('/posts/' + this.props.match.params.postId)
+                    .then(response => {
+                        console.log("response");
+                        console.log(response);
+                        this.setState({ loadedPost: response.data });
+                    });
             }
-
-        axios
-        .get(
-            'https://jsonplaceholder.typicode.com/posts/' + 
-            this.props.match.params.postId
-        )
-        .then(
-            (response) => {
-                if (response.status === 200) {
-                    this.setState({
-                        loadedPost: response.data
-                    })
-                }
-                else {
-                    console.log(
-                        response
-                    );
-                }
-            }
-
-        ) //then
-        .catch(
-            (error) => {
-                console.log("error after get");
-                console.log(error);
-                /**
-                 * Signal Error
-                 */
-                //this.props.getPostDetailsErrorCallback(error);
-            }
-        )
-
-
+        }
     }
-    else 
-    {
 
+
+    componentDidMount() {
+        console.log(this.props);
+        this.loadData();
     }
     
-}
-
-
-    /**
-     * Make full post WS call
-     * // updating state causes infinite loop
-     * 
-     */
     componentDidUpdate = (prevProps, prevState) => {
-        /**
-         * Null check
-         */
-        //console.log("arguments");
-        //console.log(prevProps);
-        // console.log(prevState);
+      this.loadData();
+    }
+    
 
-        if (this.props.id) {
 
-            /**
-             * Perform WS only if there is a change
-             */
-            if (prevProps.id === this.props.id) {
-                return
-            }
+// componentDidMount() {
+//     console.log(this.props);
 
-            axios
-                .get(
-                    'https://jsonplaceholder.typicode.com/posts/' + this.props.id
-                )
-                .then(
-                    (response) => {
-                        if (response.status === 200) {
-                            this.setState({
-                                loadedPost: response.data
-                            })
-                        }
-                        else {
-                            console.log(
-                                response
-                            );
-                        }
-                    }
+//     if (this.props.match.params.postId) {
+    
+//         if (this.state.loadedPost || (
+//             this.state.loadedPost
+//         ))
+//             {
 
-                ) //then
-                .catch(
-                    (error) => {
-                        console.log("error after get");
-                        console.log(error);
-                        /**
-                         * Signal Error
-                         */
-                        this.props.getPostDetailsErrorCallback(error);
-                    }
-                )
-        }
-        else
-        {
-            //id nil
-        }
+//             }
+
+//         axios
+//         .get(
+//             'https://jsonplaceholder.typicode.com/posts/' + 
+//             this.props.match.params.postId
+//         )
+//         .then(
+//             (response) => {
+//                 if (response.status === 200) {
+//                     this.setState({
+//                         loadedPost: response.data
+//                     })
+//                 }
+//                 else {
+//                     console.log(
+//                         response
+//                     );
+//                 }
+//             }
+
+//         ) //then
+//         .catch(
+//             (error) => {
+//                 console.log("error after get");
+//                 console.log(error);
+//                 /**
+//                  * Signal Error
+//                  */
+//                 //this.props.getPostDetailsErrorCallback(error);
+//             }
+//         )
+
+
+//     }
+//     else 
+//     {
+
+//     }
+    
+// }
+
+
+    // /**
+    //  * Make full post WS call
+    //  * // updating state causes infinite loop
+    //  * 
+    //  */
+    // componentDidUpdate = (prevProps, prevState) => {
+    //     /**
+    //      * Null check
+    //      */
+    //     //console.log("arguments");
+    //     //console.log(prevProps);
+    //     // console.log(prevState);
+
+    //     if (this.props.id) {
+
+    //         /**
+    //          * Perform WS only if there is a change
+    //          */
+    //         if (prevProps.id === this.props.id) {
+    //             return
+    //         }
+
+    //         axios
+    //             .get(
+    //                 'https://jsonplaceholder.typicode.com/posts/' + this.props.id
+    //             )
+    //             .then(
+    //                 (response) => {
+    //                     if (response.status === 200) {
+    //                         this.setState({
+    //                             loadedPost: response.data
+    //                         })
+    //                     }
+    //                     else {
+    //                         console.log(
+    //                             response
+    //                         );
+    //                     }
+    //                 }
+
+    //             ) //then
+    //             .catch(
+    //                 (error) => {
+    //                     console.log("error after get");
+    //                     console.log(error);
+    //                     /**
+    //                      * Signal Error
+    //                      */
+    //                     this.props.getPostDetailsErrorCallback(error);
+    //                 }
+    //             )
+    //     }
+    //     else
+    //     {
+    //         //id nil
+    //     }
 
       
-    }
+    // }
 
 
     state = {
